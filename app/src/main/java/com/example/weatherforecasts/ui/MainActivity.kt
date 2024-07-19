@@ -7,7 +7,9 @@ import com.example.weatherforecasts.R
 import com.example.weatherforecasts.databinding.ActivityMainBinding
 import com.example.weatherforecasts.navigation.Navigation
 import com.example.weatherforecasts.ui.homeScreen.HomeFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), Navigation {
 
     private var binding: ActivityMainBinding? = null

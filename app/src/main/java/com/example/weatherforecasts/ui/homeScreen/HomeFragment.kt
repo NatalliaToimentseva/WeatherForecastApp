@@ -4,18 +4,18 @@ import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.example.weatherforecasts.R
 import com.example.weatherforecasts.constants.CITY
 import com.example.weatherforecasts.databinding.FragmentHomeBinding
-import com.example.weatherforecasts.models.WeatherModel
+import com.example.weatherforecasts.localStorage.SharedPreferencesRepository
+import com.example.weatherforecasts.models.CurrentDayModel
 import com.example.weatherforecasts.ui.daysForecastScreen.DaysFragment
 import com.example.weatherforecasts.ui.homeScreen.adapter.VpAdapter
 import com.example.weatherforecasts.ui.hoursForecastScreen.HoursFragment
@@ -23,12 +23,18 @@ import com.example.weatherforecasts.utils.isPermissionGranted
 import com.example.weatherforecasts.utils.makeToast
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var binding: FragmentHomeBinding? = null
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by viewModels()
     private var pLauncher: ActivityResultLauncher<String>? = null
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferencesRepository
     private val fragmentsList = listOf(
         HoursFragment(),
         DaysFragment(),
@@ -50,9 +56,14 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.weatherData.observe(viewLifecycleOwner) { data ->
+            data?.run {
+                sharedPreferences.setWeatherData(this)
+                viewModel.getParsedCurrentDayWeather(this)
+            }
+        }
         viewModel.currentDayWeather.observe(viewLifecycleOwner) {
             updateCurrentCard(it)
-            Log.d("AAA", "Viewmodel data from fragment: $it")
         }
         viewModel.errorsGettingData.observe(viewLifecycleOwner) { error ->
             binding?.run {
@@ -102,10 +113,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateCurrentCard(item: WeatherModel) {
+    private fun updateCurrentCard(item: CurrentDayModel) {
         val mxMinTemp = "${item.maxTemp}C/${item.mintTemp}C"
         binding?.run {
-            tvData.text = item.time
+            tvData.text = item.dateTime
             tvCity.text = item.city
             tvCurrentTemp.text = item.currentTemp
             tvCondition.text = item.condition

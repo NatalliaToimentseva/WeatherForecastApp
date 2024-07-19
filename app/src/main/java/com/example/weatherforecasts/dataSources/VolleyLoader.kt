@@ -7,11 +7,13 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weatherforecasts.constants.DAYS
 import com.example.weatherforecasts.constants.KEY
-import com.example.weatherforecasts.models.WeatherModel
-import org.json.JSONArray
+import com.example.weatherforecasts.models.CurrentDayModel
+import com.example.weatherforecasts.models.DaysForecastModel
+import com.example.weatherforecasts.models.HoursForecastModel
 import org.json.JSONObject
+import javax.inject.Inject
 
-class VolleyLoader {
+class VolleyLoader @Inject constructor() {
 
     fun requestWeatherData(context: Context, city: String, loadData: (result: String) -> Unit) {
         val url =
@@ -31,66 +33,58 @@ class VolleyLoader {
         queue.add(request)
     }
 
-    fun parseWeatherData(
-        result: String,
-        getCurrent: (item: WeatherModel) -> Unit,
-        getDays: (List<WeatherModel>) -> Unit
-    ) {
-        val mainObject = JSONObject(result)
-        val list = parseDays(mainObject)
-        getCurrent(parseCurrentData(mainObject, list[0]))
-        getDays(list)
-    }
+    fun parseHoursWeather(result: String): List<HoursForecastModel> {
+        val hoursList = ArrayList<HoursForecastModel>()
+        val currentDayObj = getCurrentDayObj(result)
+        val hoursArr = currentDayObj.getJSONArray("hours")
 
-    fun getHoursWeather(item: WeatherModel): List<WeatherModel> {
-        val hoursArr = JSONArray(item.hours)
-        val hoursList = ArrayList<WeatherModel>()
         for (i in 0 until hoursArr.length()) {
-            val hItem = WeatherModel(
-                item.city,
+            val hItem = HoursForecastModel(
                 (hoursArr[i] as JSONObject).getString("time"),
                 (hoursArr[i] as JSONObject).getJSONObject("condition").getString("text"),
                 (hoursArr[i] as JSONObject).getString("temp_c"),
-                "", "",
                 (hoursArr[i] as JSONObject).getJSONObject("condition").getString("icon"),
-                ""
             )
             hoursList.add(hItem)
         }
         return hoursList
     }
 
-    private fun parseDays(mainObject: JSONObject): List<WeatherModel> {
-        val list = ArrayList<WeatherModel>()
+    fun parseDaysForecast(result: String): List<DaysForecastModel> {
+        val daysList = ArrayList<DaysForecastModel>()
+        val mainObject = JSONObject(result)
         val daysArr = mainObject.getJSONObject("forecast").getJSONArray("forecastday")
-        val name = mainObject.getJSONObject("location").getString("name")
         for (i in 0 until daysArr.length()) {
             val day = daysArr[i] as JSONObject
-            val item = WeatherModel(
-                name,
+            val item = DaysForecastModel(
                 day.getString("date"),
                 day.getJSONObject("day").getJSONObject("condition").getString("text"),
-                "",
                 day.getJSONObject("day").getString("maxtemp_c"),
                 day.getJSONObject("day").getString("mintemp_c"),
-                day.getJSONObject("day").getJSONObject("condition").getString("icon"),
-                day.getJSONArray("hour").toString()
+                day.getJSONObject("day").getJSONObject("condition").getString("icon")
             )
-            list.add(item)
+            daysList.add(item)
         }
-        return list
+        return daysList
     }
 
-    private fun parseCurrentData(mainObject: JSONObject, weatherItem: WeatherModel): WeatherModel {
-        return WeatherModel(
+    fun parseCurrentData(result: String): CurrentDayModel {
+        val mainObject = JSONObject(result)
+        val currentDayObj = getCurrentDayObj(result)
+        return CurrentDayModel(
             mainObject.getJSONObject("location").getString("name"),
             mainObject.getJSONObject("current").getString("last_updated"),
             mainObject.getJSONObject("current").getJSONObject("condition").getString("text"),
             mainObject.getJSONObject("current").getString("temp_c"),
-            weatherItem.maxTemp,
-            weatherItem.mintTemp,
+            currentDayObj.getJSONObject("day").getString("maxtemp_c"),
+            currentDayObj.getJSONObject("day").getString("mintemp_c"),
             mainObject.getJSONObject("current").getJSONObject("condition").getString("icon"),
-            weatherItem.hours
         )
+    }
+
+    private fun getCurrentDayObj(result: String): JSONObject {
+        val mainObject = JSONObject(result)
+        val daysArr = mainObject.getJSONObject("forecast").getJSONArray("forecastday")
+        return daysArr[0] as JSONObject
     }
 }

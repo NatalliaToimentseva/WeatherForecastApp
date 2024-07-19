@@ -5,19 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherforecasts.databinding.FragmentHoursBinding
-import com.example.weatherforecasts.models.WeatherModel
+import com.example.weatherforecasts.localStorage.SharedPreferencesRepository
+import com.example.weatherforecasts.models.HoursForecastModel
 import com.example.weatherforecasts.ui.adaptor.RwWeatherAdapter
-import com.example.weatherforecasts.ui.homeScreen.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class HoursFragment : Fragment() {
 
     private var binding: FragmentHoursBinding? = null
     private var adapter: RwWeatherAdapter? = null
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel: HoursViewModel by viewModels()
+    @Inject
+    lateinit var sharedPreferences: SharedPreferencesRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,10 +36,10 @@ class HoursFragment : Fragment() {
         viewModel.hoursForecast.observe(viewLifecycleOwner) {
             initRcView(it)
         }
-        viewModel.getHoursForecast()
+        sharedPreferences.getWeatherData()?.let { viewModel.getHoursForecast(it) }
     }
 
-    private fun initRcView(hoursForecastList: List<WeatherModel>) {
+    private fun initRcView(hoursForecastList: List<HoursForecastModel>) {
         binding?.run {
             rvListWeatherHours.layoutManager = LinearLayoutManager(requireActivity())
             adapter = RwWeatherAdapter().also {
