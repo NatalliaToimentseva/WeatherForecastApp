@@ -1,7 +1,6 @@
 package com.example.weatherforecasts.dataSources
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -24,7 +23,6 @@ class VolleyLoader @Inject constructor() {
             url,
             { result ->
                 loadData(result)
-                Log.d("AAA", "Loaded: $result")
             },
             { error ->
                 throw LoadDataException(error.message)
@@ -36,13 +34,12 @@ class VolleyLoader @Inject constructor() {
     fun parseHoursWeather(result: String): List<HoursForecastModel> {
         val hoursList = ArrayList<HoursForecastModel>()
         val currentDayObj = getCurrentDayObj(result)
-        val hoursArr = currentDayObj.getJSONArray("hours")
-
+        val hoursArr = currentDayObj.getJSONArray("hour")
         for (i in 0 until hoursArr.length()) {
             val hItem = HoursForecastModel(
                 (hoursArr[i] as JSONObject).getString("time"),
                 (hoursArr[i] as JSONObject).getJSONObject("condition").getString("text"),
-                (hoursArr[i] as JSONObject).getString("temp_c"),
+                (hoursArr[i] as JSONObject).getString("temp_c").toFloat().toInt().toString(),
                 (hoursArr[i] as JSONObject).getJSONObject("condition").getString("icon"),
             )
             hoursList.add(hItem)
@@ -59,8 +56,8 @@ class VolleyLoader @Inject constructor() {
             val item = DaysForecastModel(
                 day.getString("date"),
                 day.getJSONObject("day").getJSONObject("condition").getString("text"),
-                day.getJSONObject("day").getString("maxtemp_c"),
-                day.getJSONObject("day").getString("mintemp_c"),
+                day.getJSONObject("day").getString("maxtemp_c").toFloat().toInt().toString(),
+                day.getJSONObject("day").getString("mintemp_c").toFloat().toInt().toString(),
                 day.getJSONObject("day").getJSONObject("condition").getString("icon")
             )
             daysList.add(item)
@@ -75,9 +72,9 @@ class VolleyLoader @Inject constructor() {
             mainObject.getJSONObject("location").getString("name"),
             mainObject.getJSONObject("current").getString("last_updated"),
             mainObject.getJSONObject("current").getJSONObject("condition").getString("text"),
-            mainObject.getJSONObject("current").getString("temp_c"),
-            currentDayObj.getJSONObject("day").getString("maxtemp_c"),
-            currentDayObj.getJSONObject("day").getString("mintemp_c"),
+            mainObject.getJSONObject("current").getString("temp_c").toFloat().toInt().toString(),
+            currentDayObj.getJSONObject("day").getString("maxtemp_c").toFloat().toInt().toString(),
+            currentDayObj.getJSONObject("day").getString("mintemp_c").toFloat().toInt().toString(),
             mainObject.getJSONObject("current").getJSONObject("condition").getString("icon"),
         )
     }

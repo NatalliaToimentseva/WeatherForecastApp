@@ -36,7 +36,8 @@ class HoursFragment : Fragment() {
         viewModel.hoursForecast.observe(viewLifecycleOwner) {
             initRcView(it)
         }
-        sharedPreferences.getWeatherData()?.let { viewModel.getHoursForecast(it) }
+        sharedPreferences.getWeatherData()?.let {
+            viewModel.getHoursForecast(it) }
     }
 
     private fun initRcView(hoursForecastList: List<HoursForecastModel>) {

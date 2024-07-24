@@ -23,7 +23,6 @@
         android:id="@+id/rv_list_weather_days"
         android:layout_width="@dimen/zero_size"
         android:layout_height="@dimen/zero_size"
-        android:layout_marginHorizontal="@dimen/dm_5"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

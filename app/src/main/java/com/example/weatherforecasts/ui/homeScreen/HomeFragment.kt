@@ -2,6 +2,7 @@ package com.example.weatherforecasts.ui.homeScreen
 
 import android.Manifest
 import android.content.Context
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -21,6 +22,11 @@ import com.example.weatherforecasts.ui.homeScreen.adapter.VpAdapter
 import com.example.weatherforecasts.ui.hoursForecastScreen.HoursFragment
 import com.example.weatherforecasts.utils.isPermissionGranted
 import com.example.weatherforecasts.utils.makeToast
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.RuntimeExecutionException
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +37,8 @@ class HomeFragment : Fragment() {
 
     private var binding: FragmentHomeBinding? = null
     private val viewModel: HomeViewModel by viewModels()
-    private var pLauncher: ActivityResultLauncher<String>? = null
+    private var pLauncher: ActivityResultLauncher<Array<String>>? = null
+    private var fLocationClient: FusedLocationProviderClient? = null
 
     @Inject
     lateinit var sharedPreferences: SharedPreferencesRepository
@@ -41,9 +48,13 @@ class HomeFragment : Fragment() {
         DaysFragment()
     )
     private val tabTitles = listOf(
-        "Hours",
-        "3-days",
-        "10-days"
+        R.string.tabs_hours,
+        R.string.tabs_3_days,
+        R.string.tabs_10_days
+    )
+    private val permissions = arrayListOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
     override fun onCreateView(
@@ -60,36 +71,84 @@ class HomeFragment : Fragment() {
             data?.run {
                 sharedPreferences.setWeatherData(this)
                 viewModel.getParsedCurrentDayWeather(this)
+                showHome()
             }
         }
         viewModel.currentDayWeather.observe(viewLifecycleOwner) {
             updateCurrentCard(it)
         }
         viewModel.errorsGettingData.observe(viewLifecycleOwner) { error ->
+            if (error != null) {
+                showError(error, R.string.home_screen_error)
+                viewModel.clearError()
+            }
+        }
+        viewModel.isInProgress.observe(viewLifecycleOwner) { isProgress ->
             binding?.run {
-                if (error != null) {
-                    dayCard.visibility = View.GONE
-                    tvError.visibility = View.VISIBLE
-                    tvError.text = getString(R.string.home_screen_error)
-                    requireActivity().makeToast(error)
-                    viewModel.clearError()
+                if (isProgress) {
+                    progressBar.visibility = View.VISIBLE
+                } else {
+                    progressBar.visibility = View.GONE
                 }
             }
         }
-        checkPermission()
+        checkPermission(permissions)
         init()
+        binding?.tryAgain?.setOnClickListener {
+            checkPermission(permissions)
+        }
+        binding?.run {
+            ibSync.setOnClickListener {
+                tabLayout.selectTab(tabLayout.getTabAt(0))
+                getDate()
+            }
+        }
+    }
 
+    private fun getDate() {
         if (isInternetConnection()) {
-            viewModel.getWeatherData(requireActivity(), CITY)
+            if (isLocationAvailable()) {
+                getLocation()
+            } else {
+                viewModel.getWeatherData(requireActivity(), CITY)
+            }
         } else viewModel.setError("No internet connection")
     }
 
     private fun init() = binding?.run {
+        fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         val adapter = VpAdapter(this@HomeFragment, fragmentsList)
         viewPager.adapter = adapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = tabTitles[position]
+            tab.text = requireContext().getString(tabTitles[position])
         }.attach()
+    }
+
+    private fun getLocation() {
+        val ct = CancellationTokenSource()
+        try {
+            fLocationClient?.let { client ->
+                client.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, ct.token)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful && task.result != null) {
+                            val location = task.result
+                            viewModel.getWeatherData(
+                                requireContext(),
+                                "${location.latitude}, ${location.longitude}"
+                            )
+                        } else {
+                            requireContext().makeToast("Unable to get location. Check that location permission is granted.")
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        requireContext().makeToast(exception.message ?: "Failed to get location.")
+                    }
+            }
+        } catch (e: SecurityException) {
+            requireContext().makeToast(e.message ?: "Require location permission!")
+        } catch (e: Exception) {
+            requireContext().makeToast("An error occurred while getting location: ${e.message}")
+        }
     }
 
     private fun isInternetConnection(): Boolean {
@@ -98,30 +157,59 @@ class HomeFragment : Fragment() {
         return cm.activeNetwork != null
     }
 
+    private fun isLocationAvailable(): Boolean {
+        val lm = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return lm.isLocationEnabled
+    }
+
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
+            ActivityResultContracts.RequestMultiplePermissions()
         ) {
-
+            if (it.getValue(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                it.getValue(Manifest.permission.ACCESS_COARSE_LOCATION)
+            ) {
+                getDate()
+            } else {
+                viewModel.getWeatherData(requireActivity(), CITY)
+                requireContext().makeToast("Require location permission to show your location")
+            }
         }
     }
 
-    private fun checkPermission() {
-        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+    private fun checkPermission(permission: List<String>) {
+        if (!isPermissionGranted(permission)) {
             permissionListener()
-            pLauncher?.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
+            pLauncher?.launch(permission.toTypedArray())
+        } else getDate()
     }
 
     private fun updateCurrentCard(item: CurrentDayModel) {
-        val mxMinTemp = "${item.maxTemp}C/${item.mintTemp}C"
         binding?.run {
             tvData.text = item.dateTime
             tvCity.text = item.city
             tvCurrentTemp.text = item.currentTemp
             tvCondition.text = item.condition
-            tvMaxMin.text = mxMinTemp
+            tvMaxMin.text = getString(R.string.dateHours, item.maxTemp, item.mintTemp)
             Picasso.get().load("https:" + item.imageUrl).into(imWeather)
+        }
+    }
+
+    private fun showHome() {
+        binding?.run {
+            dayCard.visibility = View.VISIBLE
+            tvError.visibility = View.GONE
+            tryAgain.visibility = View.GONE
+        }
+    }
+
+    private fun showError(toastError: String, textError: Int) {
+        binding?.run {
+            dayCard.visibility = View.GONE
+            tvError.visibility = View.VISIBLE
+            tryAgain.visibility = View.VISIBLE
+            tvError.text = getString(textError)
+            requireActivity().makeToast(toastError)
         }
     }
 }

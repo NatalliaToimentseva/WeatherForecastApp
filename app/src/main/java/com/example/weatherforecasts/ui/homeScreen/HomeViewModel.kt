@@ -9,6 +9,7 @@ import com.example.weatherforecasts.dataSources.VolleyLoader
 import com.example.weatherforecasts.models.CurrentDayModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +27,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private val _errorsGettingData = MutableLiveData<String?>(null)
     val errorsGettingData get() = _errorsGettingData
 
+    private val _isInProgress = MutableLiveData(false)
+    val isInProgress get() = _isInProgress
+
     fun clearError() {
         _errorsGettingData.value = null
     }
@@ -36,9 +40,12 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     fun getWeatherData(context: Context, city: String) = viewModelScope.launch(Dispatchers.IO) {
         try {
+            _isInProgress.postValue(true)
             loader.requestWeatherData(context, city) { result ->
                 weatherData.value = result
             }
+            delay(1000)
+            _isInProgress.postValue(false)
         } catch (e: LoadDataException) {
             _errorsGettingData.postValue(e.message)
         }

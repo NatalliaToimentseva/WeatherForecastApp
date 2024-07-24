@@ -1,6 +1,7 @@
 package com.example.weatherforecasts.ui.adaptor
 
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherforecasts.R
 import com.example.weatherforecasts.databinding.ListItemBinding
 import com.example.weatherforecasts.models.CurrentDayModel
 import com.example.weatherforecasts.models.DaysForecastModel
@@ -17,7 +18,8 @@ class WeatherModelViewHolder(private var binding: ListItemBinding) :
             is HoursForecastModel -> binding.run {
                 tvDataTimeDayHours.text = item.time
                 tvConditionDayHours.text = item.condition
-                ivTempDayHours.text = item.currentTemp
+                ivTempDayHours.text =
+                    binding.root.context.getString(R.string.hoursTemp, item.currentTemp)
                 Picasso.get().load("https:" + item.imageUrl).into(ivDayHours)
             }
 
@@ -25,7 +27,11 @@ class WeatherModelViewHolder(private var binding: ListItemBinding) :
                 binding.run {
                     tvDataTimeDayHours.text = item.date
                     tvConditionDayHours.text = item.condition
-                    ivTempDayHours.text = "${item.maxTemp}C/${item.mintTemp}C"
+                    ivTempDayHours.text = binding.root.context.getString(
+                        R.string.dateHours,
+                        item.maxTemp,
+                        item.mintTemp
+                    )
                     Picasso.get().load("https:" + item.imageUrl).into(ivDayHours)
                 }
 

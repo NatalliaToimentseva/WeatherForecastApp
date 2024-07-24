@@ -29,6 +29,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Error of getting data" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/try_again"
+        style="@style/TryAgainButtonStyle"
+        android:text="@string/try_again"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_error" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/day_card"
         style="@style/CardStyle"
@@ -120,6 +129,7 @@
                 style="@style/ImageButtonStyle"
                 android:layout_marginEnd="@dimen/dm_16"
                 android:src="@drawable/ic_sync"
+                android:background="@drawable/refresh_button_state"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/ib_search" />
 
@@ -162,5 +172,13 @@
         app:layout_constraintEnd_toEndOf="@+id/tab_layout"
         app:layout_constraintStart_toStartOf="@+id/tab_layout"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/ProgressBarStyle"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

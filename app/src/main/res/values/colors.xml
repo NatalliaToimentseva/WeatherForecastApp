@@ -4,4 +4,7 @@
     <color name="graphite">#343435</color>
     <color name="white">#FFFFFFFF</color>
     <color name="card_blue_bg">#660394F4</color>
+    <color name="hover_bg">#4D9DD2F4</color>
+    <color name="main">#0394F4</color>
+
 </resources>

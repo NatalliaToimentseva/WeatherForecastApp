@@ -6,11 +6,18 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
-fun Fragment.isPermissionGranted(permission: String): Boolean {
-    return ContextCompat.checkSelfPermission(
-        requireActivity(),
-        permission
-    ) == PackageManager.PERMISSION_GRANTED
+fun Fragment.isPermissionGranted(permissions: List<String>): Boolean {
+    var denied = 0
+    for (p in permissions) {
+        if (ContextCompat.checkSelfPermission(
+                requireActivity(),
+                p
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            denied++
+        }
+    }
+    return denied == 0
 }
 
 fun Context.makeToast(text: String) {
