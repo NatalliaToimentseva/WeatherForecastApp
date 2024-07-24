@@ -17,11 +17,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HoursFragment : Fragment() {
 
-    private var binding: FragmentHoursBinding? = null
-    private var adapter: RwWeatherAdapter? = null
-    private val viewModel: HoursViewModel by viewModels()
     @Inject
     lateinit var sharedPreferences: SharedPreferencesRepository
+    private val viewModel: HoursViewModel by viewModels()
+    private var binding: FragmentHoursBinding? = null
+    private var adapter: RwWeatherAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +37,8 @@ class HoursFragment : Fragment() {
             initRcView(it)
         }
         sharedPreferences.getWeatherData()?.let {
-            viewModel.getHoursForecast(it) }
+            viewModel.getHoursForecast(it)
+        }
     }
 
     private fun initRcView(hoursForecastList: List<HoursForecastModel>) {

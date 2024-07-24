@@ -17,12 +17,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DaysFragment : Fragment() {
 
-    private var binding: FragmentDaysBinding? = null
-    private var adapter: RwWeatherAdapter? = null
-    private val viewModel: DaysForecastViewModel by viewModels()
     @Inject
     lateinit var sharedPreferences: SharedPreferencesRepository
-
+    private val viewModel: DaysForecastViewModel by viewModels()
+    private var binding: FragmentDaysBinding? = null
+    private var adapter: RwWeatherAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

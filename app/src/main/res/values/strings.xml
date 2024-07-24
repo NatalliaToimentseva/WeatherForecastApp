@@ -8,5 +8,19 @@
     <string name="hoursTemp">%1$sºC</string>
     <string name="dateHours">%1$sºC/%2$sºC</string>
     <string name="try_again">Try again</string>
+    <string name="positive_button">OK</string>
+    <string name="negative_button">Cancel</string>
+    <string name="dialog_title">Choose location</string>
+    <string name="dialog_message">Select a city for forecast:</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="error_get_location">Failed to get location.</string>
+    <string name="error_permission">Unable to get location. Check that location permission is granted.</string>
+    <string name="error_with_message">An error occurred while getting location: %1$s</string>
+    <string name="enable_permission">Enable location permission to show forecast in your location</string>
+    <string name="enable_location">Turn On location to show forecast in your location</string>
+    <string name="condition_icon">condition icon</string>
+    <string name="bg_image">background image</string>
+    <string name="image_search">image search</string>
+    <string name="image_update">image update</string>
 
 </resources>

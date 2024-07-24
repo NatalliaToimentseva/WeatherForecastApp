@@ -11,24 +11,29 @@ import com.example.weatherforecasts.models.DaysForecastModel
 import com.example.weatherforecasts.models.HoursForecastModel
 import org.json.JSONObject
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class VolleyLoader @Inject constructor() {
 
-    fun requestWeatherData(context: Context, city: String, loadData: (result: String) -> Unit) {
-        val url =
-            "https://api.weatherapi.com/v1/forecast.json?key=$KEY&q=$city&days=$DAYS&aqi=no&alerts=no"
-        val queue = Volley.newRequestQueue(context)
-        val request = StringRequest(
-            Request.Method.GET,
-            url,
-            { result ->
-                loadData(result)
-            },
-            { error ->
-                throw LoadDataException(error.message)
-            }
-        )
-        queue.add(request)
+    suspend fun requestWeatherData(context: Context, city: String): String {
+        return suspendCoroutine { continuation ->
+            val url =
+                "https://api.weatherapi.com/v1/forecast.json?key=$KEY&q=$city&days=$DAYS&aqi=no&alerts=no"
+            val queue = Volley.newRequestQueue(context)
+            val request = StringRequest(
+                Request.Method.GET,
+                url,
+                { result ->
+                    continuation.resume(result)
+                },
+                { error ->
+                    continuation.resumeWithException(LoadDataException(error.message))
+                }
+            )
+            queue.add(request)
+        }
     }
 
     fun parseHoursWeather(result: String): List<HoursForecastModel> {

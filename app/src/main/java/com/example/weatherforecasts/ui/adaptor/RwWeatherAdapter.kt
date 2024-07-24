@@ -7,6 +7,7 @@ import com.example.weatherforecasts.databinding.ListItemBinding
 import com.example.weatherforecasts.models.Weather
 
 class RwWeatherAdapter : ListAdapter<Weather, WeatherModelViewHolder>(WeatherDiffUtils()) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherModelViewHolder {
         return WeatherModelViewHolder(
             ListItemBinding.inflate(

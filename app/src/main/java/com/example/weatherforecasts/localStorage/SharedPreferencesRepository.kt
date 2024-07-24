@@ -26,10 +26,4 @@ class SharedPreferencesRepository @Inject constructor(@ApplicationContext contex
     fun getWeatherData(): String? {
         return userPreferences.getString(WEATHER_REMOTE_DATA, null)
     }
-
-    fun clearUserData() {
-        userPreferences.edit {
-            clear()
-        }
-    }
 }
