@@ -3,10 +3,10 @@ package com.example.weatherforecasts.ui.adaptor
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherforecasts.R
 import com.example.weatherforecasts.databinding.ListItemBinding
-import com.example.weatherforecasts.models.CurrentDayModel
-import com.example.weatherforecasts.models.DaysForecastModel
-import com.example.weatherforecasts.models.HoursForecastModel
-import com.example.weatherforecasts.models.Weather
+import com.example.weatherforecasts.ui.models.CurrentDayModel
+import com.example.weatherforecasts.ui.models.DaysForecastModel
+import com.example.weatherforecasts.ui.models.HoursForecastModel
+import com.example.weatherforecasts.ui.models.Weather
 import com.squareup.picasso.Picasso
 
 class WeatherModelViewHolder(private var binding: ListItemBinding) :

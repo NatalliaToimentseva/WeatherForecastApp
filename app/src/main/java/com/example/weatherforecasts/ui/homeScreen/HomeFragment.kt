@@ -17,8 +17,7 @@ import androidx.fragment.app.viewModels
 import com.example.weatherforecasts.R
 import com.example.weatherforecasts.constants.CITY
 import com.example.weatherforecasts.databinding.FragmentHomeBinding
-import com.example.weatherforecasts.localStorage.SharedPreferencesRepository
-import com.example.weatherforecasts.models.CurrentDayModel
+import com.example.weatherforecasts.ui.models.CurrentDayModel
 import com.example.weatherforecasts.ui.daysForecastScreen.DaysFragment
 import com.example.weatherforecasts.ui.homeScreen.adapter.VpAdapter
 import com.example.weatherforecasts.ui.hoursForecastScreen.HoursFragment
@@ -31,13 +30,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferencesRepository
     private val viewModel: HomeViewModel by viewModels()
     private val fragmentsList = listOf(
         HoursFragment(),
@@ -66,16 +62,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.weatherData.observe(viewLifecycleOwner) { data ->
-            data?.run {
-                Log.d("AAA", "get date from viewModel $data")
-                sharedPreferences.setWeatherData(this)
-                viewModel.getParsedCurrentDayWeather(this)
-                showHome()
-            }
-        }
         viewModel.currentDayWeather.observe(viewLifecycleOwner) {
             Log.d("AAA", "get parsed data from VW $it")
+            showHome()
             updateCurrentCard(it)
         }
         viewModel.errorsGettingData.observe(viewLifecycleOwner) { error ->
@@ -109,7 +98,9 @@ class HomeFragment : Fragment() {
                 getString(R.string.dialog_title),
                 getString(R.string.dialog_message)
             ) { city ->
-                viewModel.getWeatherData(requireActivity(), city)
+                if (isInternetConnection()) {
+                    viewModel.getWeatherData(requireActivity(), city)
+                } else viewModel.setError(getString(R.string.no_internet))
             }
         }
     }

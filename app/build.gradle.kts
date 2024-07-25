@@ -53,10 +53,14 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(libs.volley)
     implementation(libs.picasso)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.play.services.location)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

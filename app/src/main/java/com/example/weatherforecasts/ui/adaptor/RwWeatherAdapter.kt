@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.weatherforecasts.databinding.ListItemBinding
-import com.example.weatherforecasts.models.Weather
+import com.example.weatherforecasts.ui.models.Weather
 
 class RwWeatherAdapter : ListAdapter<Weather, WeatherModelViewHolder>(WeatherDiffUtils()) {
 
