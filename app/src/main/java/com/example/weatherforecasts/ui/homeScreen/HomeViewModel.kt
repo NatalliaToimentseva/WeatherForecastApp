@@ -1,6 +1,5 @@
 package com.example.weatherforecasts.ui.homeScreen
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,7 +43,7 @@ class HomeViewModel @Inject constructor(
         _errorsGettingData.value = message
     }
 
-    fun getWeatherData(context: Context, city: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun getWeatherData(city: String) = viewModelScope.launch(Dispatchers.IO) {
         try {
             _isInProgress.postValue(true)
             repository.loadWeatherDate(city)

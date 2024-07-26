@@ -5,7 +5,6 @@ import android.content.Context
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -63,7 +62,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.currentDayWeather.observe(viewLifecycleOwner) {
-            Log.d("AAA", "get parsed data from VW $it")
             showHome()
             updateCurrentCard(it)
         }
@@ -85,7 +83,7 @@ class HomeFragment : Fragment() {
         checkPermission(permissions)
         init()
         binding?.tryAgain?.setOnClickListener {
-            checkPermission(permissions)
+            getDate()
         }
         binding?.run {
             ibSync.setOnClickListener {
@@ -99,7 +97,7 @@ class HomeFragment : Fragment() {
                 getString(R.string.dialog_message)
             ) { city ->
                 if (isInternetConnection()) {
-                    viewModel.getWeatherData(requireActivity(), city)
+                    viewModel.getWeatherData(city)
                 } else viewModel.setError(getString(R.string.no_internet))
             }
         }
@@ -117,9 +115,7 @@ class HomeFragment : Fragment() {
         if (!isPermissionGranted(permission)) {
             permissionListener()
             pLauncher?.launch(permission.toTypedArray())
-            Log.d("AAA", "check permission yes")
         } else {
-            Log.d("AAA", "check permission no")
             getDate()
         }
     }
@@ -133,7 +129,11 @@ class HomeFragment : Fragment() {
             ) {
                 getDate()
             } else {
-                viewModel.getWeatherData(requireActivity(), CITY)
+                if (isInternetConnection()) {
+                    viewModel.getWeatherData(CITY)
+                } else {
+                    viewModel.setError(getString(R.string.no_internet))
+                }
                 requireContext().makeToast(getString(R.string.enable_permission))
             }
         }
@@ -142,30 +142,24 @@ class HomeFragment : Fragment() {
     private fun getDate() {
         if (isInternetConnection()) {
             if (isLocationAvailable()) {
-                Log.d("AAA", "get date location yes")
                 getLocation()
             } else {
-                Log.d("AAA", "get date location no")
-                viewModel.getWeatherData(requireActivity(), CITY)
+                viewModel.getWeatherData(CITY)
                 requireContext().makeToast(getString(R.string.enable_location))
             }
         } else viewModel.setError(getString(R.string.no_internet))
     }
 
     private fun getLocation() {
-        val ct = CancellationTokenSource()
         try { //FusedLocationProviderClient
             LocationServices.getFusedLocationProviderClient(requireContext()).let { client ->
-                client.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, ct.token)
+                client.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationTokenSource().token)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful && task.result != null) {
                             val location = task.result
-                            Log.d("AAA", "get location start VW request")
-                            viewModel.getWeatherData(
-                                requireContext(),
-                                "${location.latitude}, ${location.longitude}"
-                            )
+                            viewModel.getWeatherData("${location.latitude}, ${location.longitude}")
                         } else {
+                            viewModel.getWeatherData(CITY)
                             requireContext().makeToast(getString(R.string.error_permission))
                         }
                     }
@@ -194,7 +188,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateCurrentCard(item: CurrentDayModel) {
-        Log.d("AAA", "update current card")
         binding?.run {
             tvData.text = item.dateTime
             tvCity.text = item.city

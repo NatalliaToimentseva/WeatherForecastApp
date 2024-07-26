@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class UpdateWeatherController @Inject constructor() {
 
     val updatedCurrentWeather = MutableSharedFlow<CurrentDayModel>(
-        replay = 0,
+        replay = 1,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -22,7 +22,7 @@ class UpdateWeatherController @Inject constructor() {
     fun listenCurrentWeather(): Flow<CurrentDayModel> = updatedCurrentWeather
 
     val updatedHoursWeather = MutableSharedFlow<List<HoursForecastModel>>(
-        replay = 0,
+        replay = 1,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -30,7 +30,7 @@ class UpdateWeatherController @Inject constructor() {
     fun listenHoursWeather(): Flow<List<HoursForecastModel>> = updatedHoursWeather
 
     val updatedDaysWeather = MutableSharedFlow<List<DaysForecastModel>>(
-        replay = 0,
+        replay = 1,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )

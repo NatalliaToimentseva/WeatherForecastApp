@@ -4,7 +4,7 @@
     <string name="tabs_3_days">3-days</string>
     <string name="tabs_10_days">10-days</string>
     <string name="error_getting_data">Empty</string>
-    <string name="home_screen_error">Error of getting data, please check the internet connection!</string>
+    <string name="home_screen_error">Error of getting data</string>
     <string name="hoursTemp">%1$sºC</string>
     <string name="dateHours">%1$sºC/%2$sºC</string>
     <string name="try_again">Try again</string>
