@@ -2,9 +2,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/day_hours_item"
+    android:id="@+id/days_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/dm_155"
     android:layout_marginTop="@dimen/dm_3"
     android:backgroundTint="@color/card_blue_bg"
     app:cardCornerRadius="@dimen/dm_5"
@@ -15,51 +15,63 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tv_data_time_day_hours"
+            android:id="@+id/tv_day"
             style="@style/TextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dm_10"
             android:textColor="@color/graphite"
+            android:textSize="@dimen/ds_18"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Lunes 22/12/2022" />
 
         <TextView
-            android:id="@+id/tv_condition_day_hours"
+            android:id="@+id/tv_condition_days"
             style="@style/TextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dm_5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_data_time_day_hours"
-            app:layout_constraintTop_toBottomOf="@+id/tv_data_time_day_hours"
+            android:textSize="@dimen/ds_18"
+            app:layout_constraintStart_toStartOf="@+id/tv_day"
+            app:layout_constraintTop_toBottomOf="@+id/tv_day"
             tools:text="Sunny" />
 
         <TextView
-            android:id="@+id/iv_temp_day_hours"
+            android:id="@+id/tv_temp_days"
             style="@style/TextStyle"
             android:layout_width="@dimen/zero_size"
             android:layout_height="@dimen/zero_size"
             android:layout_marginVertical="@dimen/dm_5"
-            android:gravity="center"
-            android:textSize="@dimen/ds_18"
             android:layout_marginStart="@dimen/dm_20"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_day_hours"
-            app:layout_constraintStart_toEndOf="@+id/tv_data_time_day_hours"
-            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:textSize="@dimen/ds_24"
+            app:layout_constraintBottom_toTopOf="@+id/iv_days"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_condition_days"
+            app:layout_constraintTop_toBottomOf="@+id/tv_day"
             tools:text="25ºC" />
 
         <ImageView
-            android:id="@+id/iv_day_hours"
-            android:layout_width="@dimen/ds_50"
-            android:layout_height="@dimen/ds_50"
+            android:id="@+id/iv_days"
+            android:layout_width="@dimen/dm_60"
+            android:layout_height="@dimen/dm_60"
+            android:contentDescription="@string/condition_icon"
             android:src="@drawable/ic_launcher_foreground"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_condition_days"
+            app:layout_constraintTop_toBottomOf="@+id/tv_condition_days" />
+
+        <TextView
+            android:id="@+id/rain_chance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dm_10"
+            android:layout_marginBottom="@dimen/dm_10"
+            android:textSize="@dimen/ds_18"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/condition_icon" />
+            tools:text="Chance of rain: 87%" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

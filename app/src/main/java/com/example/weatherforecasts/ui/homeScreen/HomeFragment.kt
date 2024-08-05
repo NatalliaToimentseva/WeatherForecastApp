@@ -36,13 +36,11 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
     private val fragmentsList = listOf(
         HoursFragment(),
-        DaysFragment(),
         DaysFragment()
     )
     private val tabTitles = listOf(
         R.string.tabs_hours,
-        R.string.tabs_3_days,
-        R.string.tabs_10_days
+        R.string.tabs_3_days
     )
     private val permissions = arrayListOf(
         Manifest.permission.ACCESS_FINE_LOCATION,

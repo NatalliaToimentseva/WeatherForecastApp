@@ -1,5 +1,8 @@
 package com.example.weatherforecasts.dataSources.entities
 
+import com.google.gson.annotations.SerializedName
+
 data class Forecast(
-    val forecastday: List<Forecastday>
+    @SerializedName("forecastday")
+    val forecastDay: List<Forecastday>
 )

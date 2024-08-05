@@ -9,12 +9,12 @@
 
     <ImageView
         style="@style/ImageBackgroundStyle"
-        android:src="@drawable/background_cloud"
+        android:contentDescription="@string/bg_image"
+        android:src="@drawable/bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/bg_image" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_error"
@@ -67,12 +67,12 @@
 
             <ImageView
                 android:id="@+id/im_weather"
-                android:layout_width="@dimen/dm_40"
-                android:layout_height="@dimen/dm_40"
+                android:layout_width="@dimen/dm_60"
+                android:layout_height="@dimen/dm_60"
+                android:contentDescription="@string/condition_icon"
                 android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/condition_icon" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_city"
@@ -121,21 +121,21 @@
                 style="@style/ImageButtonStyle"
                 android:layout_marginStart="@dimen/dm_16"
                 android:layout_marginBottom="@dimen/dm_10"
+                android:contentDescription="@string/image_search"
                 android:src="@drawable/ic_search"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_condition"
-                android:contentDescription="@string/image_search" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_condition" />
 
             <ImageButton
                 android:id="@+id/ib_sync"
                 style="@style/ImageButtonStyle"
                 android:layout_marginEnd="@dimen/dm_16"
-                android:src="@drawable/ic_sync"
                 android:background="@drawable/refresh_button_state"
+                android:contentDescription="@string/image_update"
+                android:src="@drawable/ic_sync"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/ib_search"
-                android:contentDescription="@string/image_update" />
+                app:layout_constraintTop_toTopOf="@+id/ib_search" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -161,11 +161,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="@string/tabs_3_days" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="@string/tabs_10_days" />
 
     </com.google.android.material.tabs.TabLayout>
 

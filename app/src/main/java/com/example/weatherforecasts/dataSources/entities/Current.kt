@@ -1,7 +1,11 @@
 package com.example.weatherforecasts.dataSources.entities
 
+import com.google.gson.annotations.SerializedName
+
 data class Current(
     val condition: Condition,
-    val last_updated: String,
-    val temp_c: Double
+    @SerializedName("last_updated")
+    val lastUpdated: String,
+    @SerializedName("temp_c")
+    val tempC: Double
 )

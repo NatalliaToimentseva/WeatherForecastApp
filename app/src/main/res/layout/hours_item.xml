@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/hours_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dm_3"
+    android:backgroundTint="@color/card_blue_bg"
+    app:cardCornerRadius="@dimen/dm_5"
+    app:cardElevation="@dimen/zero_size">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_hours"
+            style="@style/TextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dm_10"
+            android:textColor="@color/graphite"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Lunes 22/12/2022" />
+
+        <TextView
+            android:id="@+id/tv_condition_hours"
+            style="@style/TextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/dm_5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_hours"
+            app:layout_constraintTop_toBottomOf="@+id/tv_hours"
+            tools:text="Sunny" />
+
+        <TextView
+            android:id="@+id/tv_temp_hours"
+            style="@style/TextStyle"
+            android:layout_width="@dimen/zero_size"
+            android:layout_height="@dimen/zero_size"
+            android:layout_marginVertical="@dimen/dm_5"
+            android:layout_marginStart="@dimen/dm_20"
+            android:gravity="center"
+            android:textSize="@dimen/ds_18"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_hours"
+            app:layout_constraintStart_toEndOf="@+id/tv_hours"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="25ºC" />
+
+        <ImageView
+            android:id="@+id/iv_hours"
+            android:layout_width="@dimen/dm_50"
+            android:layout_height="@dimen/dm_50"
+            android:contentDescription="@string/condition_icon"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

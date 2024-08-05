@@ -2,7 +2,6 @@
     <string name="app_name">Weather ForeCasts</string>
     <string name="tabs_hours">Hours</string>
     <string name="tabs_3_days">3-days</string>
-    <string name="tabs_10_days">10-days</string>
     <string name="error_getting_data">Empty</string>
     <string name="home_screen_error">Error of getting data</string>
     <string name="hoursTemp">%1$sºC</string>
@@ -22,5 +21,6 @@
     <string name="bg_image">background image</string>
     <string name="image_search">image search</string>
     <string name="image_update">image update</string>
+    <string name="rain_field">Chance of rain: %1$s%%</string>
 
 </resources>

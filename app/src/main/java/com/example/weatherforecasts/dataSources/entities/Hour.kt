@@ -1,7 +1,10 @@
 package com.example.weatherforecasts.dataSources.entities
 
+import com.google.gson.annotations.SerializedName
+
 data class Hour(
     val condition: Condition,
-    val temp_c: Double,
+    @SerializedName("temp_c")
+    val temp: Double,
     val time: String,
 )
