@@ -1,9 +1,10 @@
-package com.example.weatherforecasts.dataSources.entities
+package com.example.weatherforecasts.network.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class Day(
-    val condition: Condition,
+data class DayResponse(
+    @SerializedName("condition")
+    val condition: ConditionResponse,
     @SerializedName("maxtemp_c")
     val maxTemp: Double,
     @SerializedName("mintemp_c")

@@ -1,6 +1,6 @@
 package com.example.weatherforecasts.di
 
-import com.example.weatherforecasts.dataSources.RetrofitWeatherRepository
+import com.example.weatherforecasts.network.RetrofitWeatherRepository
 import com.example.weatherforecasts.repository.WeatherDataRepository
 import dagger.Binds
 import dagger.Module

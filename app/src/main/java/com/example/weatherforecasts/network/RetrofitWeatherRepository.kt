@@ -1,7 +1,8 @@
-package com.example.weatherforecasts.dataSources
+package com.example.weatherforecasts.network
 
 import com.example.weatherforecasts.LoadDataException
 import com.example.weatherforecasts.constants.DAYS
+import com.example.weatherforecasts.constants.DIVIDER
 import com.example.weatherforecasts.constants.KEY
 import com.example.weatherforecasts.domain.UpdateWeatherController
 import com.example.weatherforecasts.repository.WeatherDataRepository
@@ -24,7 +25,7 @@ class RetrofitWeatherRepository @Inject constructor(
             result.body()?.toListDaysForecastModel()
                 ?.let { controller.updatedDaysWeather.tryEmit(it) }
         } else {
-            throw LoadDataException(result.code().toString() + ": " + result.errorBody()?.string())
+            throw LoadDataException(result.code().toString() + DIVIDER + result.errorBody()?.string())
         }
     }
 }

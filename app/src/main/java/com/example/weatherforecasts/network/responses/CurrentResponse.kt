@@ -1,9 +1,10 @@
-package com.example.weatherforecasts.dataSources.entities
+package com.example.weatherforecasts.network.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class Current(
-    val condition: Condition,
+data class CurrentResponse(
+    @SerializedName("condition")
+    val condition: ConditionResponse,
     @SerializedName("last_updated")
     val lastUpdated: String,
     @SerializedName("temp_c")

@@ -5,6 +5,7 @@ import android.content.Context
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -155,6 +156,7 @@ class HomeFragment : Fragment() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful && task.result != null) {
                             val location = task.result
+                            Log.d("AAA", "location VW = $location")
                             viewModel.getWeatherData("${location.latitude}, ${location.longitude}")
                         } else {
                             viewModel.getWeatherData(CITY)

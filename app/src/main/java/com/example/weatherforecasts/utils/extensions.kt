@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.weatherforecasts.constants.SCHEME
 import com.squareup.picasso.Picasso
 
 fun Fragment.isPermissionGranted(permissions: List<String>): Boolean {
@@ -27,5 +28,5 @@ fun Context.makeToast(text: String) {
 }
 
 fun ImageView.load(url: String) {
-    Picasso.get().load("https:$url").into(this)
+    Picasso.get().load("$SCHEME$url").into(this)
 }
