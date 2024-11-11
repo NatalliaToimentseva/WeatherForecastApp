@@ -8,17 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherforecasts.databinding.FragmentHoursBinding
-import com.example.weatherforecasts.localStorage.SharedPreferencesRepository
-import com.example.weatherforecasts.models.HoursForecastModel
+import com.example.weatherforecasts.ui.models.HoursForecastModel
 import com.example.weatherforecasts.ui.adaptor.RwWeatherAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HoursFragment : Fragment() {
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferencesRepository
     private val viewModel: HoursViewModel by viewModels()
     private var binding: FragmentHoursBinding? = null
     private var adapter: RwWeatherAdapter? = null
@@ -35,9 +31,6 @@ class HoursFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.hoursForecast.observe(viewLifecycleOwner) {
             initRcView(it)
-        }
-        sharedPreferences.getWeatherData()?.let {
-            viewModel.getHoursForecast(it)
         }
     }
 

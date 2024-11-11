@@ -8,17 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherforecasts.databinding.FragmentDaysBinding
-import com.example.weatherforecasts.localStorage.SharedPreferencesRepository
-import com.example.weatherforecasts.models.DaysForecastModel
+import com.example.weatherforecasts.ui.models.DaysForecastModel
 import com.example.weatherforecasts.ui.adaptor.RwWeatherAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class DaysFragment : Fragment() {
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferencesRepository
     private val viewModel: DaysForecastViewModel by viewModels()
     private var binding: FragmentDaysBinding? = null
     private var adapter: RwWeatherAdapter? = null
@@ -36,7 +32,6 @@ class DaysFragment : Fragment() {
         viewModel.daysForecast.observe(viewLifecycleOwner) {
             initRcView(it)
         }
-        sharedPreferences.getWeatherData()?.let { viewModel.getDaysForecast(it) }
     }
 
     private fun initRcView(daysForecastList: List<DaysForecastModel>) {

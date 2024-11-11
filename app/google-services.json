@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1038230811120",
+    "project_id": "weather-forecasts-3b2f8",
+    "storage_bucket": "weather-forecasts-3b2f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038230811120:android:a8b4f6fec4ed5a00f06d35",
+        "android_client_info": {
+          "package_name": "com.example.weatherforecasts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYSNVBO34qMSUjQPUCL39IO7qMK-cMIoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

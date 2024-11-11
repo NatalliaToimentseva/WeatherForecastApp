@@ -1,6 +1,6 @@
 package com.example.weatherforecasts.di
 
-import com.example.weatherforecasts.dataSources.VolleyRepository
+import com.example.weatherforecasts.network.RetrofitWeatherRepository
 import com.example.weatherforecasts.repository.WeatherDataRepository
 import dagger.Binds
 import dagger.Module
@@ -15,6 +15,6 @@ abstract class WeatherRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindWeatherDataRepository(
-        weatherRepository: VolleyRepository
+        weatherRepository: RetrofitWeatherRepository
     ): WeatherDataRepository
 }

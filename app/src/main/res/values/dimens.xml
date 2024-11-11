@@ -8,10 +8,13 @@
     <dimen name="dm_16">16dp</dimen>
     <dimen name="dm_20">20dp</dimen>
     <dimen name="dm_40">40dp</dimen>
-    <dimen name="ds_50">50dp</dimen>
+    <dimen name="dm_50">50dp</dimen>
+    <dimen name="dm_60">60dp</dimen>
+    <dimen name="dm_155">155dp</dimen>
     <dimen name="ds_16">16sp</dimen>
     <dimen name="ds_18">18sp</dimen>
     <dimen name="ds_24">24sp</dimen>
+    <dimen name="ds_30">30sp</dimen>
     <dimen name="ds_70">70sp</dimen>
 
 </resources>
