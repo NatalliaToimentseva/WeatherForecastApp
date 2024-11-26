@@ -5,12 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.weatherforecasts.R
 import com.example.weatherforecasts.databinding.ActivityMainBinding
-import com.example.weatherforecasts.navigation.Navigation
 import com.example.weatherforecasts.ui.homeScreen.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), Navigation {
+class MainActivity : AppCompatActivity() {
 
     private var binding: ActivityMainBinding? = null
 
@@ -24,21 +23,10 @@ class MainActivity : AppCompatActivity(), Navigation {
         }
     }
 
-    override fun firstLaunch(fragment: Fragment) {
+    private fun firstLaunch(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, fragment)
             .commit()
-    }
-
-    override fun startFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    override fun closeFragment() {
-        supportFragmentManager.popBackStack()
     }
 }

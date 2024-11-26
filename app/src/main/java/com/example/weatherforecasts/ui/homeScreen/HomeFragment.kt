@@ -5,22 +5,22 @@ import android.content.Context
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.weatherforecasts.R
 import com.example.weatherforecasts.constants.CITY
+import com.example.weatherforecasts.constants.SCHEME
 import com.example.weatherforecasts.databinding.FragmentHomeBinding
-import com.example.weatherforecasts.ui.models.CurrentDayModel
 import com.example.weatherforecasts.ui.daysForecastScreen.DaysFragment
 import com.example.weatherforecasts.ui.homeScreen.adapter.VpAdapter
 import com.example.weatherforecasts.ui.hoursForecastScreen.HoursFragment
+import com.example.weatherforecasts.ui.models.CurrentDayModel
 import com.example.weatherforecasts.utils.isPermissionGranted
 import com.example.weatherforecasts.utils.makeToast
 import com.google.android.gms.location.LocationServices
@@ -30,6 +30,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+
+/**
+ * HomeFragment is a Fragment that displays the weather information for a specific location.
+ * It retrieves weather data based on the user's location or a specified city and presents it
+ * through a user interface that includes tabs for hourly and daily forecasts.
+ *
+ * This fragment handles permissions for location access, checks for internet connectivity,
+ * and updates the UI based on the weather data received from the ViewModel.
+ *
+ * The fragment uses the Android Jetpack components, including ViewModel, LiveData, and
+ * Activity Result APIs for handling permissions.
+ */
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -61,12 +73,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.currentDayWeather.observe(viewLifecycleOwner) {
-            showHome()
+            showHome() //Shows app main screen
             updateCurrentCard(it)
         }
         viewModel.errorsGettingData.observe(viewLifecycleOwner) { error ->
             if (error != null) {
-                showError(error, R.string.home_screen_error)
+                showError(error, R.string.home_screen_error) //Shows error screen, button "try again" and hide app main screen
                 viewModel.clearError()
             }
         }
@@ -102,6 +114,9 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Initializes the ViewPager and TabLayout for displaying weather data in tabs.
+     */
     private fun init() = binding?.run {
         val adapter = VpAdapter(this@HomeFragment, fragmentsList)
         viewPager.adapter = adapter
@@ -110,6 +125,11 @@ class HomeFragment : Fragment() {
         }.attach()
     }
 
+    /**
+     * Checks if the required permissions are granted. If not, requests permissions from the user.
+     *
+     * @param permission A list of permissions to check.
+     */
     private fun checkPermission(permission: List<String>) {
         if (!isPermissionGranted(permission)) {
             permissionListener()
@@ -119,6 +139,9 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Registers a permission listener to handle the result of permission requests.
+     */
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -138,6 +161,9 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Retrieves the weather data based on the user's location or the default city.
+     */
     private fun getDate() {
         if (isInternetConnection()) {
             if (isLocationAvailable()) {
@@ -149,17 +175,22 @@ class HomeFragment : Fragment() {
         } else viewModel.setError(getString(R.string.no_internet))
     }
 
+    /**
+     * Gets the user's current location and retrieves weather data based on it or handle errors and show toast message.
+     */
     private fun getLocation() {
-        try { //FusedLocationProviderClient
+        try {
             LocationServices.getFusedLocationProviderClient(requireContext()).let { client ->
-                client.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationTokenSource().token)
+                client.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    CancellationTokenSource().token
+                )
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful && task.result != null) {
                             val location = task.result
-                            Log.d("AAA", "location VW = $location")
-                            viewModel.getWeatherData("${location.latitude}, ${location.longitude}")
+                            viewModel.getWeatherData("${location.latitude}, ${location.longitude}") //Retrieves the weather data based on the user's location.
                         } else {
-                            viewModel.getWeatherData(CITY)
+                            viewModel.getWeatherData(CITY) //Retrieves the weather data based on the default city.
                             requireContext().makeToast(getString(R.string.error_permission))
                         }
                     }
@@ -191,10 +222,10 @@ class HomeFragment : Fragment() {
         binding?.run {
             tvData.text = item.dateTime
             tvCity.text = item.city
-            tvCurrentTemp.text = item.currentTemp
+            tvCurrentTemp.text = getString(R.string.currentTemp, item.currentTemp)
             tvCondition.text = item.condition
             tvMaxMin.text = getString(R.string.dateHours, item.maxTemp, item.mintTemp)
-            Picasso.get().load("https:" + item.imageUrl).into(imWeather)
+            Picasso.get().load(SCHEME + item.imageUrl).into(imWeather)
         }
     }
 
